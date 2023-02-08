@@ -1,6 +1,6 @@
 FROM node:16
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /home/ploi/containers/node_video_compressor_api
 
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
