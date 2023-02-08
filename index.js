@@ -1,4 +1,5 @@
 const express = require("express");
+// const serverless = require("serverless-http");
 const cors = require("cors");
 const { fork } = require("child_process");
 const fileUpload = require("express-fileupload");
@@ -10,6 +11,8 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.static('./temp'));
+
 app.use(
   fileUpload({
     tempFileDir: "temp",
@@ -36,12 +39,12 @@ app.post("/compress-video", (req, res) => {
     child.send({ tempFilePath, name: video.name });
     // Listen for message from child process
     child.on("message", (message) => {
-        const { statusCode, text, fileData } = message;
+        const { statusCode, text, newFileData } = message;
 
         res.status(statusCode).send({
             'status': statusCode,
             'message': text,
-            'fileData': fileData
+            'fileData': newFileData
         });
     });
   } else {
@@ -53,3 +56,5 @@ app.post("/compress-video", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server started on  http://localhost:${PORT}`);
 });
+
+// module.exports.handler = serverless(app);

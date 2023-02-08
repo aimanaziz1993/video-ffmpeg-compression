@@ -11,24 +11,26 @@ process.on("message", (payload) => {
   const newFilename = Date.now() + '_' + name;
 
   const endProcess = (endPayload) => {
-    console.log(endPayload)
     const { statusCode, text, data } = endPayload;
-
-    console.log(data)
     const fileData = new LocalFileData( path.join(`./temp/${data}`) )
+
+    var newFileData = {
+        name: fileData.name,
+        type: fileData.type
+    }
 
     // Remove temp file
     fs.unlink(tempFilePath, (err) => {
-      if (err) {
-        process.send({ statusCode: 500, text: err.message });
-      }
+        if (err) {
+            process.send({ statusCode: 500, text: err.message });
+        }
     });
 
     // Read file url
     // var mediaPath = path.join('./temp')
 
     // Format response so it fits the api response
-    process.send({ statusCode, text, fileData });
+    process.send({ statusCode, text, newFileData });
     // End process
     process.exit();
   };
